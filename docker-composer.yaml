@@ -1,4 +1,10 @@
 version: "3.8"
 services:
-    user:
+    user-service:
         build: ./user-service
+        ports:
+            - "5000:5000"
+        env_file:
+            - ./user-service/.env
+        depends_on:
+            - mongo
