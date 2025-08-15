@@ -38,9 +38,12 @@ exports.login = async (req, res, next) => {
 
 exports.isAuth = async (req, res, next) => {
     const token = req.body.token;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-        return res.status(401).json({ message: "Not Authorized" });
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        res.status(200).json({ message: "Authorized", decoded });
+    } catch (error) {
+        return res
+            .status(401)
+            .json({ message: "Not Authorized", error: error.message });
     }
-    res.status(200).json({ message: "Authorized", decoded });
 };

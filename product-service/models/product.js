@@ -18,6 +18,10 @@ const productSchema = new Schema({
         type: String,
         required: true,
     },
+    ownerId: {
+        type: String,
+        required: true,
+    },
     stock: {
         type: Number,
         default: 0,
