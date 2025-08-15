@@ -35,3 +35,12 @@ exports.login = async (req, res, next) => {
     );
     res.status(200).json({ message: "Logged in successfully", token });
 };
+
+exports.isAuth = async (req, res, next) => {
+    const token = req.body.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+        return res.status(401).json({ message: "Not Authorized" });
+    }
+    res.status(200).json({ message: "Authorized", decoded });
+};
