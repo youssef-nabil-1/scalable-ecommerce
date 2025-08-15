@@ -7,8 +7,19 @@ services:
         env_file:
             - ./user-service/.env
         volumes:
-            - ./user-service:./app:ro
-            - ./app/node_modules
+            - ./user-service:/app
+            - /app/node_modules
+        depends_on:
+            - mongo
+    product-service:
+        build: ./product-service
+        ports:
+            - "5001:5001"
+        env_file:
+            - ./product-service/.env
+        volumes:
+            - ./product-service:/app
+            - /app/node_modules
         depends_on:
             - mongo
     mongo:

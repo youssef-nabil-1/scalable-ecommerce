@@ -8,13 +8,17 @@ exports.createProduct = async (req, res, next) => {
             return res.status(401).json({ message: "No authorization header" });
         }
         try {
-            const isAuth = await axios.post(process.env.AUTH_SERVICE, {
-                token: authHeader.split(" ")[1],
-            });
+            const isAuth = await axios.post(
+                process.env.AUTH_SERVICE + "/auth/isAuth",
+                {
+                    token: authHeader.split(" ")[1],
+                }
+            );
             if (!isAuth.data) {
                 return res.status(401).json({ message: "Unauthorized" });
             }
         } catch (authError) {
+            console.log(authError);
             return res
                 .status(500)
                 .json({ message: "Authentication service error" });
