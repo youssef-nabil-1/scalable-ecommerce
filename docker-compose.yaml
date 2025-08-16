@@ -22,6 +22,18 @@ services:
             - /app/node_modules
         depends_on:
             - mongo
+    cart-service:
+        build: ./cart-service
+        ports:
+            - "5002:5002"
+        env_file:
+            - ./cart-service/.env
+        volumes:
+            - ./cart-service:/app
+            - /app/node_modules
+        depends_on:
+            - user-service
+            - product-service
     mongo:
         image: mongo
         ports:
@@ -37,7 +49,7 @@ services:
         depends_on:
             - user-service
             - product-service
-            # - shopping-cart-service
+            - cart-service
             # - order-service
             # - payment-service
 
