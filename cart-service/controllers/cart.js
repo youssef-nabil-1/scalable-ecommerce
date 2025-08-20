@@ -133,3 +133,36 @@ exports.getCart = async (req, res, next) => {
         });
     }
 };
+
+exports.removeCart = async (req, res, next) => {
+    try {
+        const authHeader = req.get("authorization");
+        if (!authHeader) {
+            return res.status(401).json({ message: "No authorization header" });
+        }
+        let isAuth;
+        try {
+            isAuth = await axios.post(
+                process.env.AUTH_SERVICE + "/auth/isAuth",
+                {
+                    token: authHeader.split(" ")[1],
+                }
+            );
+        } catch (authError) {
+            if (authError.status === 401)
+                return res.status(401).json({ message: "Unauthorized" });
+            return res
+                .status(500)
+                .json({ message: "Authentication service error" });
+        }
+        const userId = isAuth.data.decoded.userId;
+        let cart = await Cart.deleteOne({ ownerId: userId });
+        res.status(200).json({ message: "Cart removed", cart });
+    } catch (err) {
+        console.error("Cart removing error:", err);
+        return res.status(500).json({
+            message: "Server error",
+            error: err.message,
+        });
+    }
+};
