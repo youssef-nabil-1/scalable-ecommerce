@@ -37,10 +37,19 @@ exports.login = async (req, res, next) => {
 };
 
 exports.isAuth = async (req, res, next) => {
-    const token = req.body.token;
+    const authHeader = req.headers["authorization"];
+    if (!authHeader) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        res.status(200).json({ message: "Authorized", decoded });
+        res.set("X-User-Id", decoded.userId);
+        res.set("X-User-Email", decoded.email);
+        res.status(200).json({ message: "Authorized" });
     } catch (error) {
         return res
             .status(401)
