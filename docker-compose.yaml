@@ -47,6 +47,20 @@ services:
             - user-service
             - product-service
             - cart-service
+    payment-service:
+        build: ./payment-service
+        ports:
+            - "5004:5004"
+        env_file:
+            - ./payment-service/.env
+        volumes:
+            - ./payment-service:/app
+            - /app/node_modules
+        depends_on:
+            - user-service
+            - product-service
+            - cart-service
+            - order-service
     mongo:
         image: mongo
         ports:
