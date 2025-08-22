@@ -61,6 +61,20 @@ services:
             - product-service
             - cart-service
             - order-service
+    notification-service:
+        build: ./notification-service
+        ports:
+            - "5005:5005"
+        env_file:
+            - ./notification-service/.env
+        volumes:
+            - ./notification-service:/app
+            - /app/node_modules
+        depends_on:
+            - user-service
+            - product-service
+            - cart-service
+            - order-service
     mongo:
         image: mongo
         ports:
@@ -77,8 +91,8 @@ services:
             - user-service
             - product-service
             - cart-service
-            # - order-service
-            # - payment-service
+            - order-service
+            - payment-service
 
 volumes:
     mongo-data:
