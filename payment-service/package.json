@@ -1,0 +1,23 @@
+{
+    "name": "payment-service",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon app"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "express": "^5.1.0",
+        "mongoose": "^8.17.1",
+        "body-parser": "^2.2.0",
+        "stripe": "^18.4.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.10"
+    },
+    "nodemonConfig": {
+        "legacyWatch": true
+    }
+}
