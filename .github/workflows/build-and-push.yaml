@@ -1,7 +1,7 @@
 name: Build and Push Docker Images
 on:
   push:
-    branches: [main]
+    branches: [main, master]
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -10,7 +10,7 @@ jobs:
         service:
           - user-service
           - product-service
-          - shopping-cart-service
+          - cart-service
           - order-service
           - payment-service
           - notification-service
