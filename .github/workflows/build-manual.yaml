@@ -10,7 +10,7 @@ jobs:
 
       - name: Build Image
         run:
-          "docker build ./user-sevice --tag ${{ secrets.DOCKER_USERNAME
+          "docker build ./user-service --tag ${{ secrets.DOCKER_USERNAME
           }}/user-service:latest"
 
       - name: Login to Docker Hub
