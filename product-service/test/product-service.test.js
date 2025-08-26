@@ -45,4 +45,32 @@ describe("Product Service Testing", function () {
 		expect(res.statusCode).to.equal(201);
 		expect(res.jsonData).to.have.property("product");
 	});
+
+	it("should fail retrieving a product given a wrong id", async function () {
+		let req = {
+			params: {
+				prodId: "andjbsjadbas",
+			},
+		};
+		let res = {
+			statusCode: 0,
+			jsonData: null,
+			status: function (code) {
+				this.statusCode = code;
+				return this;
+			},
+			json: function (data) {
+				this.jsonData = data;
+				return this;
+			},
+		};
+
+		await productController.getProductById(req, res, () => {});
+
+		expect(res.statusCode).to.equal(404);
+		expect(res.jsonData).to.have.property(
+			"message",
+			"Could not find product with this id"
+		);
+	});
 });
