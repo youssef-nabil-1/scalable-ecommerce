@@ -3,7 +3,9 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon app"
+		"start": "nodemon app",
+		"test": "mocha --timeout 5000",
+		"test:watch": "mocha --watch --timeout 5000"
 	},
 	"author": "",
 	"license": "ISC",
