@@ -1,24 +1,29 @@
 {
-    "name": "user-service",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "start": "nodemon app"
-    },
-    "author": "",
-    "license": "ISC",
-    "description": "",
-    "dependencies": {
-        "bcrypt": "^6.0.0",
-        "body-parser": "^2.2.0",
-        "express": "^5.1.0",
-        "jsonwebtoken": "^9.0.2",
-        "mongoose": "^8.17.1"
-    },
-    "devDependencies": {
-        "nodemon": "^3.1.10"
-    },
-    "nodemonConfig": {
-        "legacyWatch": true
-    }
+	"name": "user-service",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon app",
+		"test": "mocha --timeout 5000",
+		"test:watch": "mocha --watch --timeout 5000"
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"bcrypt": "^6.0.0",
+		"body-parser": "^2.2.0",
+		"express": "^5.1.0",
+		"jsonwebtoken": "^9.0.2",
+		"mongoose": "^8.17.1"
+	},
+	"devDependencies": {
+		"nodemon": "^3.1.10",
+		"mocha": "^11.7.1",
+		"chai": "^6.0.1",
+		"sinon": "^21.0.0"
+	},
+	"nodemonConfig": {
+		"legacyWatch": true
+	}
 }
