@@ -49,7 +49,7 @@ describe("Product Service Testing", function () {
 	it("should fail retrieving a product given a wrong id", async function () {
 		let req = {
 			params: {
-				prodId: "andjbsjadbas",
+				prodId: new mongoose.Types.ObjectId(),
 			},
 		};
 		let res = {
