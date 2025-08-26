@@ -27,21 +27,22 @@ describe("Product Service Testing", function () {
 				return "53912309123";
 			},
 		};
+		let res = {
+			statusCode: 0,
+			jsonData: null,
+			status: function (code) {
+				this.statusCode = code;
+				return this;
+			},
+			json: function (data) {
+				this.jsonData = data;
+				return this;
+			},
+		};
+
+		await productController.createProduct(req, res, () => {});
+
+		expect(res.statusCode).to.equal(201);
+		expect(res.jsonData).to.have.property("product");
 	});
-
-	let res = {
-		statusCode: 0,
-		jsonData: null,
-		status: function (code) {
-			this.statusCode = code;
-			return this;
-		},
-		json: function (data) {
-			this.jsonData = data;
-			return this;
-		},
-	};
-
-	expect(res.statusCode).to.equal(201);
-	expect(res.jsonData).to.have.property("product");
 });
