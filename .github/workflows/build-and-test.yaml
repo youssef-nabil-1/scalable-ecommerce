@@ -27,6 +27,6 @@ jobs:
           cd ./${{ matrix.service }}
           npm ci
       - name: Run test
-        run:
+        run: |
+          cd ./${{ matrix.service }}
           npm test
-          # cd ./${{ matrix.service }}
