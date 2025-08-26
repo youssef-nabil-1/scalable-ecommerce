@@ -45,14 +45,14 @@ exports.getProducts = async (req, res, next) => {
 exports.getProductById = async (req, res, next) => {
 	try {
 		const prodId = req.params.prodId;
-		const [product] = await Product.find({ _id: prodId });
+		const product = await Product.findById(prodId);
 		if (!product) {
-			res.status(404).json({
+			return res.status(404).json({
 				message: "Could not find product with this id",
 			});
 		}
 		console.log(product);
-		res.status(200).json({ message: "Product fetched", product });
+		return res.status(200).json({ message: "Product fetched", product });
 	} catch (err) {
 		console.error("Product fetching error:", err);
 		return res.status(500).json({
