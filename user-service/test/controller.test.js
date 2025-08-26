@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const userController = require("../controllers/user");
 
 describe("createUser", () => {
-	it("should create a user successfully", async (done) => {
+	it("should create a user successfully", async () => {
 		const req = {
 			body: {
 				name: "Test User",
@@ -26,7 +26,6 @@ describe("createUser", () => {
 		const next = () => {};
 		await userController.createUser(req, res, next);
 
-		expect(res.status).to.equal(201);
-		done();
+		expect(res.statusCode).to.equal(201);
 	});
 });
