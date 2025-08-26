@@ -22,10 +22,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-          cache: "npm"
       - name: Install dependencies
-        run: |
-          cd ./matrix.service
+        run:
           npm ci
+          # cd ./${{ matrix.service }}
       - name: Run test
-        run: npm test
+        run: |
+          cd ./${{ matrix.service }}
+          npm test
