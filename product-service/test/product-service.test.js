@@ -73,4 +73,46 @@ describe("Product Service Testing", function () {
 			"Could not find product with this id"
 		);
 	});
+
+	it("should delete fail deleting a product with wrong user id", async function () {
+		let req = {
+			body: {
+				name: "Test Product",
+				price: 30,
+				discription: "test",
+				category: "electronic",
+				stock: 500,
+			},
+			get: function (header) {
+				return "53912309123";
+			},
+		};
+		let res = {
+			statusCode: 0,
+			jsonData: null,
+			status: function (code) {
+				this.statusCode = code;
+				return this;
+			},
+			json: function (data) {
+				this.jsonData = data;
+				return this;
+			},
+		};
+		await productController.createProduct(req, res, () => {});
+		const id = res.jsonData.product._id;
+		req = {
+			params: {
+				prodId: id,
+			},
+			get: function (header) {
+				return "ndjsand";
+			},
+		};
+
+		await productController.deleteProduct(req, res, () => {});
+
+		expect(res.statusCode).to.equal(401);
+		expect(res.jsonData).to.have.property("message", "Unauthorized");
+	});
 });

@@ -70,6 +70,12 @@ exports.deleteProduct = async (req, res, next) => {
 		const prodId = req.params.prodId;
 		const product = await Product.findById(prodId);
 
+		if (!product) {
+			return res.status(404).json({
+				message: "Could not find product with this id",
+			});
+		}
+
 		if (product.ownerId !== userId) {
 			return res.status(401).json({ message: "Unauthorized" });
 		}
