@@ -174,10 +174,52 @@ For any service:
 Run NGINX separately or call services directly on their ports during
 development.
 
+### Testing
+
+- Each service can define its own tests; examples are present in
+  `user-service/test/` and `product-service/test/`.
+- CI runs `npm test` inside each matrix service with a local MongoDB service.
+- Local test run example:
+  ```bash
+  cd user-service
+  MONGODB_URI=mongodb://localhost:27017/testdb JWT_SECRET=devsecret npm test
+  ```
+
 ### Tech stack
 
 - Node.js, Express, MongoDB, Mongoose
 - NGINX (reverse proxy + centralized auth), Docker Compose
+
+### CI/CD
+
+- **Build & Test**: GitHub Actions runs unit tests on push
+  (`.github/workflows/build-and-test.yaml`).
+  - Matrix over services (currently `user-service`, `product-service`) with a
+    MongoDB service.
+  - Uses Node.js 20, `npm ci`, then `npm test` with `MONGODB_URI` and
+    `JWT_SECRET` envs.
+- **Build & Push Images**: Manual workflow builds and pushes Docker images for
+  all services to Docker Hub (`build-and-push.yaml`).
+  - Requires `DOCKER_USERNAME` and `DOCKER_PASSWORD` repo secrets.
+  - Tags: `<docker-username>/<service>:latest`.
+- **Deploy to Kubernetes (AWS EKS)**: Manual workflow applies each service's
+  `deployment.yaml` and `service.yaml` (`deploy.yaml`).
+  - Requires `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and
+    `EKS_CLUSTER_NAME` repo secrets.
+  - Installs `kubectl`, updates kubeconfig, then `kubectl apply` per service.
+
+### Kubernetes manifests
+
+- Each service includes `deployment.yaml` and `service.yaml` for K8s deployment
+  and exposure.
+- To deploy manually if you already have a configured kube-context:
+  ```bash
+  for d in user-service product-service cart-service order-service payment-service notification-service; do
+    kubectl apply -f ./$d/deployment.yaml
+    kubectl apply -f ./$d/service.yaml
+  done
+  ```
+  Ensure images referenced by the manifests are available in your registry.
 
 ### Notable engineering details
 
@@ -202,8 +244,8 @@ development.
   cached auth decisions
 - **Build & Deploy**: Multi-stage Dockerfiles, healthchecks, readiness/liveness
   probes, blue/green or canary
-- **CI/CD**: GitHub Actions for lint/test/build, vulnerability scans (npm audit,
-  Trivy), Snyk
+- **CI/CD**: Extend pipelines with linting, vulnerability scans (npm audit,
+  Trivy), Snyk; add release tagging and changelog generation
 - **Testing**: Contract tests (Pact), integration tests via docker compose, seed
   data
 
@@ -213,7 +255,7 @@ development.
 - `payment-service` routes: resolve overlapping `GET /payment/:id` paths
 - Add integration tests and contract tests between gateway and services
 - Add rate limiting and request logging at the gateway
-- Add CI (lint, test, build) and production Dockerfiles with healthchecks
+- Add linting in CI and production-grade Dockerfiles with healthchecks
 
 ### Repository layout
 
