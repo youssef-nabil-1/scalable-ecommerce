@@ -1,0 +1,28 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: notification-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      label:
+        app: notification
+    specs:
+      containers:
+        - name: users
+          image: ${{ secrets.DOCKER_USERNAME }}/notification-service:latest
+          env:
+            - name: MONGO_URI
+              value:
+                "mongodb+srv:// ${{
+                secrets.MONGODB_USERNAME}}:${{secrets.MONGODB_PASSWORD}}@cluster.mongodb.net/notification-service"
+            - name: PORT
+              value: "5005"
+            - name: SENDGRID_API_KEY
+              value: ${{secrets.SENDGRID_API_KEY}}
+            - name: SENDGRID_EMAIL
+              value: ${{secrets.SENDGRID_EMAIL}}

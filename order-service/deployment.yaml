@@ -1,0 +1,30 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: order-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      label:
+        app: order
+    specs:
+      containers:
+        - name: users
+          image: ${{ secrets.DOCKER_USERNAME }}/order-service:latest
+          env:
+            - name: MONGO_URI
+              value:
+                "mongodb+srv:// ${{
+                secrets.MONGODB_USERNAME}}:${{secrets.MONGODB_PASSWORD}}@cluster.mongodb.net/order-service"
+            - name: PORT
+              value: "5002"
+            - name: AUTH_SERVICE
+              value: "users-service.default:5000"
+            - name: PRODUCT_SERVICE
+              value: "products-service.default:5001"
+            - name: CART_SERVICE
+              value: "cart-service.default:5002"

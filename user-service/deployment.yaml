@@ -1,0 +1,26 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      label:
+        app: users
+    specs:
+      containers:
+        - name: users
+          image: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
+          env:
+            - name: MONGO_URI
+              value:
+                "mongodb+srv:// ${{
+                secrets.MONGODB_USERNAME}}:${{secrets.MONGODB_PASSWORD}}@cluster.mongodb.net/user-service"
+            - name: JWT_SECRET
+              value: ${{ secrets.JWT_SECRET }}
+            - name: PORT
+              value: "5000"

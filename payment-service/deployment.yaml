@@ -1,0 +1,26 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: payment-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      label:
+        app: payment
+    specs:
+      containers:
+        - name: users
+          image: ${{ secrets.DOCKER_USERNAME }}/payment-service:latest
+          env:
+            - name: MONGO_URI
+              value:
+                "mongodb+srv:// ${{
+                secrets.MONGODB_USERNAME}}:${{secrets.MONGODB_PASSWORD}}@cluster.mongodb.net/payment-service"
+            - name: PORT
+              value: "5005"
+            - name: STRIPE_KEY
+              value: ${{secrets.STRIPE_KEY}}
