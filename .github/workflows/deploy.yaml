@@ -1,0 +1,44 @@
+name: Deploy project
+
+on:
+  # push:
+  #   branches: [main, master]
+  workflow_dispatch:
+jobs:
+  deploy-to-aws:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - user-service
+          - product-service
+          - cart-service
+          - order-service
+          - payment-service
+          - notification-service
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: "v1.28.0"
+
+      - name: Update kubeconfig for EKS
+        run:
+          "aws eks update-kubeconfig --region us-west-2 --name ${{
+          secrets.EKS_CLUSTER_NAME }}"
+
+      - name: Apply Deployments
+        run: kubectl apply -f="./${{ matrix.service }}/deployment.yaml"
+
+      - name: Apply Services
+        run: kubectl apply -f="./${{ matrix.service }}/service.yaml"
